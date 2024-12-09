@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cochera N°{{ device_index }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            background-color: #007BFF; /* Color azul */
+            color: white;
+            padding: 20px;
+            margin: 0;
+            font-size: 2rem;
+        }
+        #status-image {
+            width: 80%;
+            max-width: 600px;
+            height: auto;
+            margin: 20px auto;
+            border: none; /* Eliminar el borde */
+            border-radius: 0; /* Eliminar las esquinas redondeadas */
+        }
+        .container {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cochera N°{{ device_index }}</h1>
+    <div class="container">
+        <img id="status-image" src="/static/estacione.jpg" alt="Estado actual">
+    </div>
+
+    <script>
+        const images = {
+            0: "/static/estacione.jpg",
+            1: "/static/frene.jpg",
+            2: "/static/adelante.jpg",
+            3: "/static/corrija_antihorario.jpg",
+            4: "/static/corrija_izquierda.jpg",
+            5: "/static/corrija_derecha.jpg"
+        };
+
+        function updateImage() {
+            fetch(`/get_status/{{ device_index }}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("status-image").src = images[data.img];
+                })
+                .catch(error => console.error('Error fetching status:', error));
+        }
+
+        setInterval(updateImage, 100);
+    </script>
+</body>
+</html>
