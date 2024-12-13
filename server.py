@@ -121,9 +121,6 @@ def gen_frames(index):
                         text = pytesseract.image_to_string(plate, config="--psm 8 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
                         text = re.sub(r'[^A-Z0-9]', '', text) 
 
-                        if len(text) < 6 or len(text) > 7:
-                            continue
-
                         if len(text) == 6:
                             real_ratio = REAL_RATIO_OLD
                             real_width = KNOWN_WIDTH_OLD
