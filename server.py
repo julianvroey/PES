@@ -13,11 +13,15 @@ app.secret_key = '1234'
 
 view_app = Flask(__name__)
 
-KNOWN_WIDTH = 145.0  
-KNOWN_HEIGHT = 45.0  
-FOCAL_LENGTH = 600   
+KNOWN_WIDTH_OLD = 145
+KNOWN_HEIGHT_OLD = 45
+REAL_RATIO_OLD = KNOWN_WIDTH_OLD / KNOWN_HEIGHT_OLD
+KNOWN_WIDTH_NEW = 235 
+KNOWN_HEIGHT_NEW = 53
+REAL_RATIO_NEW = KNOWN_WIDTH_NEW / KNOWN_HEIGHT_NEW
+FOCAL_LENGTH_OLD = 600   
+FOCAL_LENGTH_NEW = 600  
 MIN_AREA = 700
-REAL_RATIO = KNOWN_WIDTH / KNOWN_HEIGHT
 MAX_ROTATION = 15
 
 text_ = None
@@ -110,7 +114,7 @@ def gen_frames(index):
                         metric = distance_to_center - 0.5 * cv2.contourArea(contour) 
 
                         roi = blur[y:y + h, x:x + w]
-                        _, binary = cv2.threshold(roi, 55, 255, cv2.THRESH_BINARY_INV)
+                        _, binary = cv2.threshold(roi, 80, 255, cv2.THRESH_BINARY_INV)
                         kernel = np.ones((1, 1), np.uint8)
                         plate = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
 
@@ -118,6 +122,17 @@ def gen_frames(index):
                         text = re.sub(r'[^A-Z0-9]', '', text) 
 
                         if len(text) < 6 or len(text) > 7:
+                            continue
+
+                        if len(text) == 6:
+                            real_ratio = REAL_RATIO_OLD
+                            real_width = KNOWN_WIDTH_OLD
+                            focal_length = FOCAL_LENGTH_OLD
+                        elif len(text) == 7:
+                            real_ratio = REAL_RATIO_NEW
+                            real_width = KNOWN_WIDTH_NEW
+                            focal_length = FOCAL_LENGTH_NEW
+                        else :
                             continue
 
                         if metric < matched_metric:
@@ -145,8 +160,8 @@ def gen_frames(index):
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
 
             text_ = matched_text
-            distance_ = f"{round(calculate_distance(KNOWN_WIDTH, FOCAL_LENGTH, matched_width) / 10, 1)} cm"
-            deviation_ = f"{round(np.degrees(np.arccos(min(observed_ratio / REAL_RATIO, 1))), 1)} °" 
+            distance_ = f"{round(calculate_distance(real_width, focal_length, matched_width) / 10, 1)} cm"
+            deviation_ = f"{round(np.degrees(np.arccos(min(observed_ratio / real_ratio, 1))), 1)} °" 
         else:
             text_ = "-"
             distance_ = "-"
