@@ -19,9 +19,9 @@ REAL_RATIO_OLD = KNOWN_WIDTH_OLD / KNOWN_HEIGHT_OLD
 KNOWN_WIDTH_NEW = 235 
 KNOWN_HEIGHT_NEW = 53
 REAL_RATIO_NEW = KNOWN_WIDTH_NEW / KNOWN_HEIGHT_NEW
-FOCAL_LENGTH_OLD = 600   
-FOCAL_LENGTH_NEW = 600  
-MIN_AREA = 700
+FOCAL_LENGTH_OLD = 550   
+FOCAL_LENGTH_NEW = 550  
+MIN_AREA = 500
 MAX_ROTATION = 15
 
 text_ = None
@@ -309,10 +309,10 @@ def get_status(device_index):
 
 
 def run_server():
-    app.run(port=5000, debug=True, use_reloader=False)
+    app.run(port=5000, debug=False, host="0.0.0.0", use_reloader=False)
 
 def run_view():
-    view_app.run(port=5001, debug=True, use_reloader=False)
+    view_app.run(port=5001, debug=False, host="0.0.0.0", use_reloader=False)
 
 if __name__ == '__main__':
     Thread(target=run_server).start()
