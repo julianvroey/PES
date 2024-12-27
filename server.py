@@ -114,7 +114,7 @@ def gen_frames(index):
                         metric = distance_to_center - 0.5 * cv2.contourArea(contour) 
 
                         roi = blur[y:y + h, x:x + w]
-                        _, binary = cv2.threshold(roi, 80, 255, cv2.THRESH_BINARY_INV)
+                        _, binary = cv2.threshold(roi, 55, 255, cv2.THRESH_BINARY_INV)
                         kernel = np.ones((1, 1), np.uint8)
                         plate = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
 
@@ -125,12 +125,12 @@ def gen_frames(index):
                             real_ratio = REAL_RATIO_OLD
                             real_width = KNOWN_WIDTH_OLD
                             focal_length = FOCAL_LENGTH_OLD
-                        elif len(text) == 7:
+                        else:#elif len(text) == 7:
                             real_ratio = REAL_RATIO_NEW
                             real_width = KNOWN_WIDTH_NEW
                             focal_length = FOCAL_LENGTH_NEW
-                        else :
-                            continue
+                        #else :
+                            #continue
 
                         if metric < matched_metric:
                             matched_metric = metric
